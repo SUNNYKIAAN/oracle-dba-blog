@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SMTP Access for Oracle Database (with Wallet & Gmail)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.7; background: #f8f8f8; color: #333; }
+    h1, h2, h3 { color: #004080; }
+    code { background: #eee; padding: 2px 5px; border-radius: 4px; }
+    pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+    table, th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #eaeaea; }
+    .note { background: #fff8dc; padding: 10px; border-left: 4px solid #ffcc00; margin: 10px 0; }
+    a { color: #004080; }
+  </style>
+</head>
+<body>
+
+<h1>SMTP Access for Oracle Database (with Gmail & Wallet Integration)</h1>
+
+<h2>✅ What You’ll Learn</h2>
+<ul>
+  <li>Use UTL_MAIL and UTL_SMTP to send emails</li>
+  <li>Send secure emails via Gmail using Postfix or Oracle Wallet</li>
+  <li>Store SMTP credentials securely with Oracle Wallet</li>
+</ul>
+
+<h2>📚 Table of Contents</h2>
+<ol>
+  <li><a href="#prerequisites">Prerequisites</a></li>
+  <li><a href="#utl">UTL_MAIL vs UTL_SMTP</a></li>
+  <li><a href="#privileges">Grant Required Privileges</a></li>
+  <li><a href="#postfix">Setup: SMTP via Postfix Relay</a></li>
+  <li><a href="#wallet">Setup: SMTP via Oracle Wallet</a></li>
+</ol>
+
+<h2 id="prerequisites">✅ 1. Prerequisites</h2>
+<ul>
+  <li>Oracle DB running</li>
+  <li>Access to an SMTP server (e.g., Gmail, Office365)</li>
+  <li>Internet or intranet access for outbound SMTP</li>
+</ul>
+
+<h2 id="utl">🛠️ 2. UTL_MAIL vs UTL_SMTP</h2>
+<table>
+  <thead>
+    <tr><th>Package</th><th>Description</th><th>Complexity</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>UTL_SMTP</td><td>Low-level protocol control</td><td>High</td></tr>
+    <tr><td>UTL_MAIL</td><td>Simplified wrapper</td><td>Low</td></tr>
+  </tbody>
+</table>
+
+<h2 id="privileges">🔐 3. Grant Required Privileges</h2>
+<pre><code>BEGIN
+  DBMS_NETWORK_ACL_ADMIN.create_acl(
+    acl         =&gt; 'smtp_acl.xml',
+    description =&gt; 'Allow SMTP access',
+    principal   =&gt; 'YOUR_SCHEMA',
+    is_grant    =&gt; TRUE,
+    privilege   =&gt; 'connect'
+  );
+
+  DBMS_NETWORK_ACL_ADMIN.assign_acl(
+    acl        =&gt; 'smtp_acl.xml',
+    host       =&gt; 'smtp.yourserver.com',
+    lower_port =&gt; 25,
+    upper_port =&gt; 25
+  );
+END;
+</code></pre>
+
+<h2 id="postfix">📦 4. Setup SMTP via Postfix (Gmail Relay)</h2>
+<p>Install Postfix on Linux:</p>
+<pre><code>sudo apt install postfix mailutils</code></pre>
+
+<p>Configure main.cf:</p>
+<pre><code>relayhost = [smtp.gmail.com]:587
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+</code></pre>
+
+<p>Add credentials:</p>
+<pre><code>[smtp.gmail.com]:587 your_email@gmail.com:your_app_password</code></pre>
+
+<p>Restart Postfix:</p>
+<pre><code>sudo systemctl restart postfix</code></pre>
+
+<p>Configure Oracle to use localhost SMTP:</p>
+<pre><code>ALTER SYSTEM SET smtp_out_server = '127.0.0.1:25' SCOPE = BOTH;</code></pre>
+
+<h2 id="wallet">🔐 5. Setup SMTP via Oracle Wallet</h2>
+
+<h3>Create Wallet</h3>
+<pre><code>
+orapki wallet create -wallet /u01/app/oracle/admin/SMTPWallet -pwd MyWalletPass123 -auto_login
+</code></pre>
+
+<h3>Add SMTP credentials</h3>
+<pre><code>
+orapki wallet add -wallet /u01/app/oracle/admin/SMTPWallet -pwd MyWalletPass123 \
+  -cred "smtp.gmail.com" your_email@gmail.com your_app_password
+</code></pre>
+
+<h3>Set sqlnet.ora</h3>
+<pre><code>
+WALLET_LOCATION = (SOURCE=(METHOD=FILE)(METHOD_DATA=(DIRECTORY=/u01/app/oracle/admin/SMTPWallet)))
+SQLNET.WALLET_OVERRIDE = TRUE
+</code></pre>
+
+<h3>Use JavaMail in Oracle Java Stored Procedure</h3>
+
+<pre><code>
+Properties props = new Properties();
+props.put("mail.smtp.host", "smtp.gmail.com");
+props.put("mail.smtp.port", "587");
+props.put("mail.smtp.auth", "true");
+props.put("mail.smtp.starttls.enable", "true");
+
+Authenticator auth = new Authenticator() {
+  protected PasswordAuthentication getPasswordAuthentication() {
+    return new PasswordAuthentication("your_email@gmail.com", "your_app_password");
+  }
+};
+</code></pre>
+
+<h2>✅ Conclusion</h2>
+<ul>
+  <li><strong>Best security:</strong> Oracle Wallet + Java</li>
+  <li><strong>Easiest method:</strong> Postfix Relay</li>
+  <li><strong>For internal SMTP:</strong> UTL_MAIL is sufficient</li>
+</ul>
+
+</body>
+</html>
