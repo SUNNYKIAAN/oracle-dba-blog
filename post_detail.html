@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post: Oracle Data Guard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <header class="bg-red-700 text-white p-6">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold">Oracle DBA Blog</h1>
+      <p class="text-sm">Insights, tutorials, and tips for Oracle DBAs</p>
+    </div>
+  </header>
+  <main class="container mx-auto px-4 py-8">
+    <article class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-bold mb-2">How to Configure Oracle Data Guard</h2>
+      <p class="text-sm text-gray-600 mb-4">Posted on July 25, 2025</p>
+      <p class="mb-4">
+        Oracle Data Guard ensures high availability, data protection, and disaster recovery for enterprise data. In this guide,
+        we will walk through setting up Oracle Data Guard from scratch.
+      </p>
+      <h3 class="text-xl font-semibold mb-2 mt-6">Step 1: Enable Force Logging</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+SQL> ALTER DATABASE FORCE LOGGING;
+      </pre>
+      <h3 class="text-xl font-semibold mb-2 mt-6">Step 2: Create Standby Redo Logs</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+SQL> ALTER DATABASE ADD STANDBY LOGFILE GROUP 4 ('/u01/app/oracle/oradata/redo04.log') SIZE 500M;
+      </pre>
+      <h3 class="text-xl font-semibold mb-2 mt-6">Step 3: Configure Listener and TNS</h3>
+      <p class="mb-4">Update <code>listener.ora</code> and <code>tnsnames.ora</code> on both primary and standby.</p>
+      <h3 class="text-xl font-semibold mb-2 mt-6">Step 4: Enable Redo Transport</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+SQL> ALTER SYSTEM SET LOG_ARCHIVE_DEST_2='SERVICE=standby LGWR ASYNC VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME=standby';
+      </pre>
+      <p class="mt-6">Repeat similar steps on the standby database and test the configuration thoroughly.</p>
+      <a href="index.html" class="inline-block mt-6 text-red-700 hover:underline">← Back to Blog</a>
+    </article>
+  </main>
+  <footer class="bg-gray-800 text-white text-center p-4 mt-12">
+    <p>&copy; 2025 Oracle DBA Blog. All rights reserved.</p>
+  </footer>
+</body>
+</html>

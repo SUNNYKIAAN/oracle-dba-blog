@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oracle DBA Blog</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script>
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <header class="bg-red-700 text-white p-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold">Oracle DBA Blog</h1>
+        <p class="text-sm">Insights, tutorials, and tips for Oracle DBAs</p>
+      </div>
+      <button onclick="toggleDarkMode()" class="bg-white text-red-700 px-3 py-1 rounded font-semibold">Toggle Theme</button>
+    </div>
+  </header>
+  <nav class="bg-white dark:bg-gray-800 shadow">
+    <div class="container mx-auto px-4 py-2 flex space-x-4">
+      <a href="#" class="text-red-700 font-semibold">Home</a>
+      <a href="#" class="hover:text-red-700">Blog</a>
+      <a href="#" class="hover:text-red-700">About</a>
+      <a href="#" class="hover:text-red-700">Contact</a>
+    </div>
+  </nav>
+  <main class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+      <input type="text" id="searchInput" placeholder="Search posts..." class="w-full p-2 border rounded">
+    </div>
+    <h2 class="text-2xl font-bold mb-6">Latest Posts</h2>
+    <div id="postsContainer" class="grid md:grid-cols-2 gap-6">
+      <div class="post bg-white dark:bg-gray-800 rounded-xl shadow p-4">
+        <h3 class="text-xl font-semibold mb-2">How to Configure Oracle Data Guard</h3>
+        <p class="text-gray-600 text-sm mb-4">Posted on July 25, 2025</p>
+        <p>Learn how to set up Oracle Data Guard for high availability and disaster recovery...</p>
+        <a href="post_detail.html" class="text-red-700 mt-2 inline-block">Read more →</a>
+      </div>
+      <div class="post bg-white dark:bg-gray-800 rounded-xl shadow p-4">
+        <h3 class="text-xl font-semibold mb-2">RMAN Backup Best Practices</h3>
+        <p class="text-gray-600 text-sm mb-4">Posted on July 20, 2025</p>
+        <p>Discover the best strategies for using RMAN to back up your Oracle databases efficiently...</p>
+        <a href="#" class="text-red-700 mt-2 inline-block">Read more →</a>
+      </div>
+      <div class="post bg-white dark:bg-gray-800 rounded-xl shadow p-4">
+        <h3 class="text-xl font-semibold mb-2">Understanding Oracle Wait Events</h3>
+        <p class="text-gray-600 text-sm mb-4">Posted on July 15, 2025</p>
+        <p>A guide to interpreting Oracle wait events and improving query performance...</p>
+        <a href="#" class="text-red-700 mt-2 inline-block">Read more →</a>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white text-center p-4 mt-12">
+    <p>&copy; 2025 Oracle DBA Blog. All rights reserved.</p>
+  </footer>
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const posts = document.querySelectorAll('.post');
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      posts.forEach(post => {
+        const title = post.querySelector('h3').textContent.toLowerCase();
+        post.style.display = title.includes(query) ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
