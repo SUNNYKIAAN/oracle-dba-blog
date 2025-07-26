@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMAN Backup Tutorial</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <header class="bg-red-700 text-white p-6">
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold">Oracle DBA Blog</h1>
+      <p class="text-sm">RMAN Backup Tutorial</p>
+    </div>
+  </header>
+  <main class="container mx-auto px-4 py-8">
+    <article class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-bold mb-2">RMAN Backup Best Practices</h2>
+      <p class="text-sm text-gray-600 mb-4">Posted on July 26, 2025</p>
+      <p class="mb-4">
+        RMAN (Recovery Manager) is Oracle's recommended tool for backup and recovery. In this tutorial, we'll cover
+        best practices and commonly used RMAN commands to protect your Oracle database effectively.
+      </p>
+
+      <h3 class="text-xl font-semibold mb-2 mt-6">1. Configure RMAN Settings</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+RMAN> CONFIGURE RETENTION POLICY TO REDUNDANCY 2;
+RMAN> CONFIGURE CONTROLFILE AUTOBACKUP ON;
+      </pre>
+
+      <h3 class="text-xl font-semibold mb-2 mt-6">2. Full Database Backup</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+RMAN> BACKUP DATABASE PLUS ARCHIVELOG;
+      </pre>
+
+      <h3 class="text-xl font-semibold mb-2 mt-6">3. Backup Validation</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+RMAN> RESTORE DATABASE VALIDATE;
+      </pre>
+
+      <h3 class="text-xl font-semibold mb-2 mt-6">4. Deleting Obsolete Backups</h3>
+      <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
+RMAN> DELETE OBSOLETE;
+      </pre>
+
+      <h3 class="text-xl font-semibold mb-2 mt-6">5. Scheduling Backups with Crontab</h3>
+      <p class="mb-4">
+        You can schedule RMAN scripts via crontab using shell scripts that call `rman target / @backup_script.rcv`.
+      </p>
+
+      <a href="index.html" class="inline-block mt-6 text-red-700 hover:underline">← Back to Blog</a>
+    </article>
+  </main>
+  <footer class="bg-gray-800 text-white text-center p-4 mt-12">
+    <p>&copy; 2025 Oracle DBA Blog. All rights reserved.</p>
+  </footer>
+</body>
+</html>
